@@ -55,11 +55,15 @@
                             <thead>
                             <th>#</th>
                             <th>Titulo</th>
+                            <th>Eliminar</th>
                             </thead>
                             <tbody>
                             <tr v-for="departure in departures">
                                 <td>@{{ departure.id }}</td>
                                 <td>@{{ departure.title }}</td>
+                                <td @click="openModal('departure','delete',departure)">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -106,6 +110,8 @@
                     <p class="control" v-if="modalDeparture!=0">
                         <input class="input" placeholder="Departamento" v-model="titleDeparture"
                                v-if="modalDeparture==1">
+                        <input class="input" placeholder="Departamento" v-model="titleDeparture" readonly
+                               v-if="modalDeparture==3">
                     </p>
                     <div v-show="errorTitleDeparture" class="columns text-center">
                         <div class="column text-center text-danger">
@@ -115,6 +121,7 @@
                     <div class="columns button-content">
                         <div class="column">
                             <a class="button is-success" @click="createDeparture()" v-if="modalDeparture==1">Aceptar</a>
+                            <a class="button is-success" @click="destroyDeparture()" v-if="modalDeparture==3">Aceptar</a>
                         </div>
                         <div class="column">
                             <a class="button is-danger" @click="closeModal()">Cancelar</a>
@@ -166,6 +173,19 @@
                     this.titleModal = '';
                     this.messageModal = '';
                 },
+                destroyDeparture(){
+                    let me = this;
+                    axios.delete('{{url('/departure/delete')}}'+'/'+this.idDeparture)
+                        .then(function (response) {
+                            me.idDeparture = 0;
+                            me.titleDeparture='';
+                            me.modalDeparture = 0;
+                            me.closeModal();
+                        })
+                        .catch(function (error) {
+                            console.log('error: ' + error);
+                        });
+                },
                 createDeparture() {
                     if (this.titleDeparture == '') {
                         this.errorTitleDeparture = 1;
@@ -202,6 +222,12 @@
                                     break;
                                 }
                                 case 'delete': {
+                                    this.titleModal = 'Eliminación del Departamento';
+                                    this.messageModal = 'Titulo del departamento';
+                                    this.modalDeparture = 3;
+                                    this.modalGeneral = 1;
+                                    this.titleDeparture = data['title'];
+                                    this.idDeparture = data['id'];
                                     break;
                                 }
 
