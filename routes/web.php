@@ -14,4 +14,4 @@
 Route::get('/', function () {
     return view('home');
 });
-
+Route::post('/departure/create','DepartureController@create')->name('departurecreate');
