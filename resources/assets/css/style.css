@@ -1,0 +1,66 @@
+.personal-menu{
+    background-color: #000;
+    color:#fff;
+}
+.personal-content {
+    background-color:#fff;
+    color:#000;
+}
+.text-center {
+    text-align: center;
+    justify-content: center;
+}
+.text-danger {
+    color:#800000;
+    font-size:12px;
+}
+.vertical-center  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vertical-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.vertical-bottom{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.hand-option{
+    cursor: pointer;
+}
+
+.margin0 {
+    margin:0;
+}
+
+.padding0 {
+    padding:0;
+}
+.line-der {
+    border-right:1px solid #000;
+}
+.modal-content {
+    background-color: #fff;
+    padding:20px;
+}
+.button-content {
+    margin-top: 15px;
+    text-align: center;
+}
+div.cov-vue-date {
+    width:100%;
+}
+div.cov-vue-date div {
+    width:100%;
+}
+div.cov-vue-date div input {
+    width:100%;
+}
+.select {
+    min-width: 100%;
+    width:100%;
+}
