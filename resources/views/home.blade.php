@@ -48,7 +48,21 @@
                 </div>
                 <div class="columns">
                     <div class="column">
-                        Tabla de departamentos
+                        <div v-if="!departures.length">
+                            No hay departamentos
+                        </div>
+                        <table v-else class="table">
+                            <thead>
+                            <th>#</th>
+                            <th>Titulo</th>
+                            </thead>
+                            <tbody>
+                            <tr v-for="departure in departures">
+                                <td>@{{ departure.id }}</td>
+                                <td>@{{ departure.title }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -117,22 +131,42 @@
     <script>
         let elemento = new Vue({
             el: '.app',
+            mounted: function () {
+                this.allQuery();
+            },
             data: {
                 menu: 0,
-                modalGeneral:0,
-                titleModal:'',
-                messageModal:'',
-                modalDeparture:0,
-                titleDeparture:'',
-                errorTitleDeparture:0
+                modalGeneral: 0,
+                titleModal: '',
+                messageModal: '',
+                modalDeparture: 0,
+                titleDeparture: '',
+                errorTitleDeparture: 0,
+                departures: []
+            },
+            watch: {
+                modalGeneral: function (value) {
+                    if (!value) this.allQuery();
+                }
             },
             methods: {
+                allQuery() {
+                    let me = this;
+                    axios.get('{{route('allQuery')}}')
+                        .then(function (response) {
+                            let answer = response.data;
+                            me.departures = answer.departures;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
                 closeModal() {
                     this.modalGeneral = 0;
                     this.titleModal = '';
                     this.messageModal = '';
                 },
-                createDeparture(){
+                createDeparture() {
                     if (this.titleDeparture == '') {
                         this.errorTitleDeparture = 1;
                         return;
@@ -153,11 +187,9 @@
                 },
                 openModal(type, action, data = []) {
                     switch (type) {
-                        case "departure":
-                        {
+                        case "departure": {
                             switch (action) {
-                                case 'create':
-                                {
+                                case 'create': {
                                     this.modalGeneral = 1;
                                     this.titleModal = 'Creación de Departamento';
                                     this.messageModal = 'Ingrese el titulo del departamento';
@@ -166,52 +198,42 @@
                                     this.errorTitleDeparture = 0;
                                     break;
                                 }
-                                case 'update':
-                                {
+                                case 'update': {
                                     break;
                                 }
-                                case 'delete':
-                                {
-                                    break;
-                                }
-
-                            }
-                            break;
-                        }
-                        case "position":
-                        {
-                            switch (action) {
-                                case 'create':
-                                {
-
-                                    break;
-                                }
-                                case 'update':
-                                {
-                                    break;
-                                }
-                                case 'delete':
-                                {
+                                case 'delete': {
                                     break;
                                 }
 
                             }
                             break;
                         }
-                        case "employee":
-                        {
+                        case "position": {
                             switch (action) {
-                                case 'create':
-                                {
+                                case 'create': {
 
                                     break;
                                 }
-                                case 'update':
-                                {
+                                case 'update': {
                                     break;
                                 }
-                                case 'delete':
-                                {
+                                case 'delete': {
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                        case "employee": {
+                            switch (action) {
+                                case 'create': {
+
+                                    break;
+                                }
+                                case 'update': {
+                                    break;
+                                }
+                                case 'delete': {
                                     break;
                                 }
 
