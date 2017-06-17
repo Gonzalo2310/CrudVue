@@ -133,6 +133,23 @@
                     this.messageModal = '';
                 },
                 createDeparture(){
+                    if (this.titleDeparture == '') {
+                        this.errorTitleDeparture = 1;
+                        return;
+                    }
+                    let me = this;
+                    axios.post('{{route('departurecreate')}}', {
+                        'title': this.titleDeparture
+                    })
+                        .then(function (response) {
+                            me.titleDeparture = '';
+                            me.errorTitleDeparture = 0;
+                            me.modalDeparture = 0;
+                            me.closeModal();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 },
                 openModal(type, action, data = []) {
                     switch (type) {
