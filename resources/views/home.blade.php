@@ -99,7 +99,7 @@
         </div>
         <div class="columns margin0 text-center vertical-center personal-menu">
             <div class="column">Empleados 0</div>
-            <div class="column">Departamentos 0</div>
+            <div class="column">Departamentos @{{ departures.length }}</div>
             <div class="column">Cargo 0</div>
         </div>
     </div>
