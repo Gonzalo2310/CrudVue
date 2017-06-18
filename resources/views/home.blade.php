@@ -79,10 +79,38 @@
                     <div class="column text-center">
                         <h3>Cargos</h3>
                     </div>
+                    <div class="column" v-if="departures.length">
+                        <a class="button is-success" @click="openModal('position','create')">Agregar Cargo</a>
+                    </div>
+                    <div class="column" v-else>
+                        <span class="text-danger">Debe existir un departamento por lo menos</span>
+                    </div>
                 </div>
                 <div class="columns">
                     <div class="column">
-                        Tabla Cargos
+                        <div v-if="!positions.length">
+                            No hay Cargos
+                        </div>
+                        <table v-else class="table">
+                            <thead>
+                            <th>#</th>
+                            <th>Titulo</th>
+                            <th>Eliminar</th>
+                            <th>Editar</th>
+                            </thead>
+                            <tbody>
+                            <tr v-for="position in positions">
+                                <td>@{{ position.id }}</td>
+                                <td>@{{ position.title }}</td>
+                                <td @click="openModal('position','delete',position)">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                </td>
+                                <td @click="openModal('position','update',position)">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -111,7 +139,7 @@
                 <h3 class="text-center">@{{titleModal}}</h3>
                 <div class="field">
                     <label class="label">@{{messageModal}}</label>
-                    <p class="control" v-if="modalDeparture!=0">
+                    <p class="control" v-if="modalDeparture">
                         <input class="input" placeholder="Departamento" v-model="titleDeparture" :readonly="modalDeparture==3">
                     </p>
                     <div v-show="errorTitleDeparture" class="columns text-center">
@@ -119,11 +147,25 @@
                             El nombre del Departamento no puede estar vacio
                         </div>
                     </div>
+                    <p class="control" v-if="modalPosition">
+                        <input class="input" placeholder="Cargo" v-model="titlePosition" :readonly="modalPosition==3">
+                        <select class="select" :readonly="modalPosition==3" v-model="idDeparturePosition">
+                            <option v-for="departure in  departures" :value="departure.id">@{{ departure.title }}</option>
+                        </select>
+                    </p>
+                    <div v-show="errorTitlePosition" class="columns text-center">
+                        <div class="column text-center text-danger">
+                            El nombre del Cargo no puede estar vacio
+                        </div>
+                    </div>
                     <div class="columns button-content">
                         <div class="column">
                             <a class="button is-success" @click="createDeparture()" v-if="modalDeparture==1">Aceptar</a>
                             <a class="button is-success" @click="updateDeparture()" v-if="modalDeparture==2">Aceptar</a>
                             <a class="button is-success" @click="destroyDeparture()" v-if="modalDeparture==3">Aceptar</a>
+                            <a class="button is-success" @click="createPosition()"  v-if="modalPosition==1">Aceptar</a>
+                            <a class="button is-success" @click="updatePosition()"  v-if="modalPosition==2">Aceptar</a>
+                            <a class="button is-success" @click="destroyPosition()" v-if="modalPosition==3">Aceptar</a>
                         </div>
                         <div class="column">
                             <a class="button is-danger" @click="closeModal()">Cancelar</a>
@@ -148,10 +190,17 @@
                 modalGeneral: 0,
                 titleModal: '',
                 messageModal: '',
+                /***** Departure *****/
                 modalDeparture: 0,
                 titleDeparture: '',
                 errorTitleDeparture: 0,
-                departures: []
+                departures: [],
+                /********* Position ***********/
+                positions:[],
+                modalPosition: 0,
+                titlePosition: '',
+                errorTitlePosition: 0,
+                idDeparturePosition:0
             },
             watch: {
                 modalGeneral: function (value) {
@@ -165,11 +214,15 @@
                         .then(function (response) {
                             let answer = response.data;
                             me.departures = answer.departures;
+                            me.positions=answer.positions;
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
                 },
+                updatePosition(){},
+                destroyPosition(){},
+                createPosition(){},
                 updateDeparture() {
                     if (this.titleDeparture == '') {
                         this.errorTitleDeparture = 1;
@@ -267,7 +320,13 @@
                         case "position": {
                             switch (action) {
                                 case 'create': {
-
+                                    this.modalGeneral = 1;
+                                    this.titleModal = 'Creación de Cargo';
+                                    this.messageModal = 'Ingrese el titulo del Cargo';
+                                    this.modalPosition = 1;
+                                    this.titlePosition = '';
+                                    this.errorTitlePosition = 0;
+                                    this.idDeparturePosition=this.departures[0].id;
                                     break;
                                 }
                                 case 'update': {

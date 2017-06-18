@@ -18,4 +18,8 @@ Route::post('/departure/create','DepartureController@create')->name('departurecr
 Route::delete('/departure/delete/{id}','DepartureController@delete')->name('departuredelete');
 Route::put('/departure/update','DepartureController@update')->name('departureupdate');
 
+Route::post('/position/create','PositionController@create')->name('positioncreate');
+Route::delete('/position/delete/{id}','PositionController@delete')->name('positiondelete');
+Route::put('/position/update','PositionController@update')->name('positionupdate');
+
 Route::get('/allQuery','QueryController@allQuery')->name('allQuery');
