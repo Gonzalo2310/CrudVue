@@ -16,6 +16,6 @@ window.Vue = require('vue');
  */
 
 
-//Vue.component('fecha', require('./components/datepicker.vue'));
+Vue.component('birthdaypicker', require('./components/datepicker.vue'));
 
 
