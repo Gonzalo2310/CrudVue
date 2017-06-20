@@ -121,9 +121,15 @@
                     <div class="column text-center">
                         <h3>Empleado</h3>
                     </div>
-                    <div class="column">
-                        Tabla Empleados
+                    <div class="column" v-if="positions.length">
+                        <a class="button is-success" @click="openModal('employee','create')">Agregar Empleado</a>
                     </div>
+                    <div class="column" v-else>
+                        <span class="text-danger">Debe existir un cargo por lo menos</span>
+                    </div>
+                </div>
+                <div class="columns">
+                    Tabla Empleados
                 </div>
             </div>
         </div>
@@ -142,7 +148,8 @@
                 <div class="field">
                     <label class="label">@{{messageModal}}</label>
                     <p class="control" v-if="modalDeparture">
-                        <input class="input" placeholder="Departamento" v-model="titleDeparture" :readonly="modalDeparture==3">
+                        <input class="input" placeholder="Departamento" v-model="titleDeparture"
+                               :readonly="modalDeparture==3">
                     </p>
                     <div v-show="errorTitleDeparture" class="columns text-center">
                         <div class="column text-center text-danger">
@@ -152,7 +159,8 @@
                     <p class="control" v-if="modalPosition">
                         <input class="input" placeholder="Cargo" v-model="titlePosition" :readonly="modalPosition==3">
                         <select class="select" :disabled="modalPosition==3" v-model="idDeparturePosition">
-                            <option v-for="departure in  departures" :value="departure.id">@{{ departure.title }}</option>
+                            <option v-for="departure in  departures" :value="departure.id">@{{ departure.title }}
+                            </option>
                         </select>
                     </p>
                     <div v-show="errorTitlePosition" class="columns text-center">
@@ -160,14 +168,41 @@
                             El nombre del Cargo no puede estar vacio
                         </div>
                     </div>
+                    <p class="control" v-if="modalEmployee">
+                        <input class="input" :readonly="modalEmployee==3" placeholder="Nombre" v-model="nameEmployee">
+                        <input class="input" :readonly="modalEmployee==3" placeholder="Apellido"
+                               v-model="lastnameEmployee">
+                        <input class="input" :readonly="modalEmployee==3" placeholder="Correo" v-model="emailEmployee">
+                        <input class="input" :readonly="modalEmployee==3" placeholder="Nacimiento"
+                               v-model="birthdayEmployee">
+                        <label>Departamento: </label>
+                        <select class="select" :disabled="modalEmployee==3" v-model="idFilterDeparture">
+                            <option v-for="departure in filterDeparture" :value="departure.id">@{{ departure.title }}
+                            </option>
+                        </select>
+                        <label>Cargo: </label>
+                        <select class="select" :disabled="modalEmployee==3" v-model="idFilterPosition">
+                            <option v-for="position in filterPosition" :value="position.id">@{{ position.title }}
+                            </option>
+                        </select>
+                    </p>
+                    <div v-show="errorEmployee" class="columns text-center">
+                        <div class="column text-center text-danger">
+                            @{{ errorMessageEmployee }}
+                        </div>
+                    </div>
                     <div class="columns button-content">
                         <div class="column">
                             <a class="button is-success" @click="createDeparture()" v-if="modalDeparture==1">Aceptar</a>
                             <a class="button is-success" @click="updateDeparture()" v-if="modalDeparture==2">Aceptar</a>
-                            <a class="button is-success" @click="destroyDeparture()" v-if="modalDeparture==3">Aceptar</a>
-                            <a class="button is-success" @click="createPosition()"  v-if="modalPosition==1">Aceptar</a>
-                            <a class="button is-success" @click="updatePosition()"  v-if="modalPosition==2">Aceptar</a>
+                            <a class="button is-success" @click="destroyDeparture()"
+                               v-if="modalDeparture==3">Aceptar</a>
+                            <a class="button is-success" @click="createPosition()" v-if="modalPosition==1">Aceptar</a>
+                            <a class="button is-success" @click="updatePosition()" v-if="modalPosition==2">Aceptar</a>
                             <a class="button is-success" @click="destroyPosition()" v-if="modalPosition==3">Aceptar</a>
+                            <a class="button is-success" @click="createEmployee()" v-if="modalEmployee==1">Aceptar</a>
+                            <a class="button is-success" @click="updateEmployee()" v-if="modalEmployee==2">Aceptar</a>
+                            <a class="button is-success" @click="destroyEmployee()" v-if="modalEmployee==3">Aceptar</a>
                         </div>
                         <div class="column">
                             <a class="button is-danger" @click="closeModal()">Cancelar</a>
@@ -198,12 +233,26 @@
                 errorTitleDeparture: 0,
                 departures: [],
                 /********* Position ***********/
-                positions:[],
+                positions: [],
                 modalPosition: 0,
                 titlePosition: '',
                 errorTitlePosition: 0,
-                idDeparturePosition:0,
-                idPosition:0
+                idDeparturePosition: 0,
+                idPosition: 0,
+                /*************** Employee **********/
+                idEmployee: 0,
+                employee: [],
+                modalEmployee: 0,
+                nameEmployee: '',
+                lastnameEmployee: '',
+                emailEmployee: '',
+                birthdayEmployee: '',
+                idFilterDeparture: 0,
+                filterDeparture: [],
+                idFilterPosition: 0,
+                filterPosition: [],
+                errorEmployee:0,
+                errorMessageEmployee:'',
             },
             watch: {
                 modalGeneral: function (value) {
@@ -217,51 +266,57 @@
                         .then(function (response) {
                             let answer = response.data;
                             me.departures = answer.departures;
-                            me.positions=answer.positions;
+                            me.positions = answer.positions;
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
                 },
-                updatePosition(){
+                createEmployee() {
+                },
+                updateEmployee() {
+                },
+                destroyEmployee() {
+                },
+                updatePosition() {
                     if (this.titlePosition == '') {
                         this.errorTitlePosition = 1;
                         return;
                     }
                     let me = this;
                     axios.put('{{route('positionupdate')}}', {
-                        'id':this.idPosition,
+                        'id': this.idPosition,
                         'title': this.titlePosition,
-                        'departure':this.idDeparturePosition
+                        'departure': this.idDeparturePosition
                     })
                         .then(function (response) {
                             me.titlePosition = '';
                             me.errorTitlePosition = 0;
                             me.modalPosition = 0;
-                            me.idDeparturePosition=0;
-                            me.idPosition=0;
+                            me.idDeparturePosition = 0;
+                            me.idPosition = 0;
                             me.closeModal();
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
                 },
-                destroyPosition(){
+                destroyPosition() {
                     let me = this;
-                    axios.delete('{{url('/position/delete')}}'+'/'+this.idPosition)
+                    axios.delete('{{url('/position/delete')}}' + '/' + this.idPosition)
                         .then(function (response) {
                             me.titlePosition = '';
                             me.errorTitlePosition = 0;
                             me.modalPosition = 0;
-                            me.idDeparturePosition=0;
-                            me.idPosition=0;
+                            me.idDeparturePosition = 0;
+                            me.idPosition = 0;
                             me.closeModal();
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
                 },
-                createPosition(){
+                createPosition() {
                     if (this.titlePosition == '') {
                         this.errorTitlePosition = 1;
                         return;
@@ -269,13 +324,13 @@
                     let me = this;
                     axios.post('{{route('positioncreate')}}', {
                         'title': this.titlePosition,
-                        'departure':this.idDeparturePosition
+                        'departure': this.idDeparturePosition
                     })
                         .then(function (response) {
                             me.titlePosition = '';
                             me.errorTitlePosition = 0;
                             me.modalPosition = 0;
-                            me.idDeparturePosition=0;
+                            me.idDeparturePosition = 0;
                             me.closeModal();
                         })
                         .catch(function (error) {
@@ -307,15 +362,16 @@
                     this.modalGeneral = 0;
                     this.titleModal = '';
                     this.messageModal = '';
-                    this.modalDeparture=0;
-                    this.modalPosition=0;
+                    this.modalDeparture = 0;
+                    this.modalPosition = 0;
+                    this.modalEmployee = 0;
                 },
-                destroyDeparture(){
+                destroyDeparture() {
                     let me = this;
-                    axios.delete('{{url('/departure/delete')}}'+'/'+this.idDeparture)
+                    axios.delete('{{url('/departure/delete')}}' + '/' + this.idDeparture)
                         .then(function (response) {
                             me.idDeparture = 0;
-                            me.titleDeparture='';
+                            me.titleDeparture = '';
                             me.modalDeparture = 0;
                             me.closeModal();
                         })
@@ -387,7 +443,7 @@
                                     this.modalPosition = 1;
                                     this.titlePosition = '';
                                     this.errorTitlePosition = 0;
-                                    this.idDeparturePosition=this.departures[0].id;
+                                    this.idDeparturePosition = this.departures[0].id;
                                     break;
                                 }
                                 case 'update': {
@@ -396,9 +452,9 @@
                                     this.messageModal = 'Ingrese el nuevo titulo';
                                     this.modalPosition = 2;
                                     this.titlePosition = data['title'];
-                                    this.idPosition=data['id'];
+                                    this.idPosition = data['id'];
                                     this.errorTitlePosition = 0;
-                                    this.idDeparturePosition=data['departure']['id'];
+                                    this.idDeparturePosition = data['departure']['id'];
                                     break;
                                 }
                                 case 'delete': {
@@ -407,9 +463,9 @@
                                     this.messageModal = 'Confirme';
                                     this.modalPosition = 3;
                                     this.titlePosition = data['title'];
-                                    this.idPosition=data['id'];
+                                    this.idPosition = data['id'];
                                     this.errorTitlePosition = 0;
-                                    this.idDeparturePosition=data['departure']['id'];
+                                    this.idDeparturePosition = data['departure']['id'];
                                     break;
                                 }
 
@@ -419,7 +475,18 @@
                         case "employee": {
                             switch (action) {
                                 case 'create': {
-
+                                    this.modalGeneral = 1;
+                                    this.titleModal = 'Creación de Empleado';
+                                    this.messageModal = 'Ingrese los datos del Empleado';
+                                    this.modalEmployee = 1;
+                                    this.nameEmployee = '';
+                                    this.lastnameEmployee = '';
+                                    this.emailEmployee = '';
+                                    this.birthdayEmployee = '';
+                                    this.idFilterDeparture = 0;
+                                    this.filterDeparture = [];
+                                    this.idFilterPosition = 0;
+                                    this.filterPosition = [];
                                     break;
                                 }
                                 case 'update': {
