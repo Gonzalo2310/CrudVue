@@ -173,8 +173,6 @@
                         <input class="input" :readonly="modalEmployee==3" placeholder="Apellido"
                                v-model="lastnameEmployee">
                         <input class="input" :readonly="modalEmployee==3" placeholder="Correo" v-model="emailEmployee">
-                        <!--<input class="input" :readonly="modalEmployee==3" placeholder="Nacimiento"
-                               v-model="birthdayEmployee"> -->
                         <birthdayPicker :birthday.sync="birthdayEmployee"></birthdayPicker>
                         <label>Departamento: </label>
                         <select class="select" :disabled="modalEmployee==3" v-model="idFilterDeparture">
@@ -196,8 +194,7 @@
                         <div class="column">
                             <a class="button is-success" @click="createDeparture()" v-if="modalDeparture==1">Aceptar</a>
                             <a class="button is-success" @click="updateDeparture()" v-if="modalDeparture==2">Aceptar</a>
-                            <a class="button is-success" @click="destroyDeparture()"
-                               v-if="modalDeparture==3">Aceptar</a>
+                            <a class="button is-success" @click="destroyDeparture()" v-if="modalDeparture==3">Aceptar</a>
                             <a class="button is-success" @click="createPosition()" v-if="modalPosition==1">Aceptar</a>
                             <a class="button is-success" @click="updatePosition()" v-if="modalPosition==2">Aceptar</a>
                             <a class="button is-success" @click="destroyPosition()" v-if="modalPosition==3">Aceptar</a>
@@ -252,12 +249,21 @@
                 filterDeparture: [],
                 idFilterPosition: 0,
                 filterPosition: [],
-                errorEmployee:0,
-                errorMessageEmployee:'',
+                errorEmployee: 0,
+                errorMessageEmployee: '',
             },
             watch: {
                 modalGeneral: function (value) {
                     if (!value) this.allQuery();
+                },
+                idFilterDeparture: function (value) {
+                    let me = this;
+                    this.filterDeparture.map(function (x) {
+                        if (x.id === value) {
+                            me.filterPosition = x.positions;
+                            me.idFilterPosition = me.filterPosition[0].id;
+                        }
+                    });
                 }
             },
             methods: {
@@ -268,6 +274,7 @@
                             let answer = response.data;
                             me.departures = answer.departures;
                             me.positions = answer.positions;
+                            console.log(me.departures);
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -484,10 +491,23 @@
                                     this.lastnameEmployee = '';
                                     this.emailEmployee = '';
                                     this.birthdayEmployee = '';
-                                    this.idFilterDeparture = 0;
                                     this.filterDeparture = [];
-                                    this.idFilterPosition = 0;
                                     this.filterPosition = [];
+                                    let me = this;
+                                    this.departures.map(function (x) {
+                                        if (x.positions.length) {
+                                            if (me.filterDeparture.indexOf(x)) me.filterDeparture.push(x);
+                                        }
+                                    });
+                                    if (this.filterDeparture.length) {
+                                        this.idFilterDeparture = this.filterDeparture[0].id;
+                                        this.filterPosition = this.filterDeparture[0].positions;
+                                        this.idFilterPosition = this.filterDeparture[0].positions[0].id;
+                                    } else {
+                                        this.idFilterDeparture = 0;
+                                        this.idFilterPosition = 0;
+                                        this.filterPosition = [];
+                                    }
                                     break;
                                 }
                                 case 'update': {
