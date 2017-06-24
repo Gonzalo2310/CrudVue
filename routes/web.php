@@ -28,3 +28,7 @@ Route::put('/employee/update','EmployeeController@update')->name('employeeupdate
 
 
 Route::get('/allQuery','QueryController@allQuery')->name('allQuery');
+
+Route::get('/error',function(){
+   return view('error');
+});

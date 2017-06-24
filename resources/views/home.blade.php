@@ -295,6 +295,49 @@
                     if (this.validateEmployee()){
                         return;
                     }
+                    let me=this;
+                    axios.post('{{route('employeecreate')}}', {
+                        'name':this.nameEmployee,
+                        'lastname':this.lastnameEmployee,
+                        'email':this.emailEmployee,
+                        'birthday':this.birthdayEmployee,
+                        'position':this.idFilterPosition
+                    })
+                        .then(function (response) {
+                            me.errorMessageEmployee=[];
+                            me.errorEmployee=0;
+                            if (response.data.date){
+                                me.errorEmployee=1;
+                                me.errorMessageEmployee.push(response.data.date[0]);
+                            }else {
+                                me.nameEmployee = '';
+                                me.lastnameEmployee = '';
+                                me.emailEmployee = '';
+                                me.birthdayEmployee = '';
+                                me.idFilterPosition = 0;
+                                me.errorEmployee = 0;
+                                me.errorMessageEmployee = [];
+                                me.modalEmployee = 0;
+                                me.closeModal();
+                            }
+                        })
+                        .catch(function (error) {
+                            me.errorMessageEmployee=[];
+                            me.errorEmployee=0;
+                            if (error.response && error.response.status===500){
+                                console.log(error.response.data)
+                            }
+                            if (error.response && error.response.status===422){
+                                me.errorEmployee=1;
+                                error.response.data.email.forEach(function(element){
+                                    me.errorMessageEmployee.push(element);
+                                });
+                                console.clear();
+                            }else {
+                                console.log(error);
+                            }
+
+                        });
                 },
                 updateEmployee() {
                 },

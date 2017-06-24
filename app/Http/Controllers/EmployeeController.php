@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEmployee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Employee;
 
@@ -14,8 +15,16 @@ class EmployeeController extends Controller
         $unknow = Carbon::createFromFormat('d-m-Y', $request->birthday);
         if ($unknow->diffInYears($today) < 18) {
             return [
-                'fecha' => ['EL empleado tiene que tener mas de 18 años']
+                'date' => ['El empleado tiene que tener mas de 18 años']
             ];
+        } else {
+            $employee=new Employee();
+            $employee->name=$request->name;
+            $employee->lastname=$request->lastname;
+            $employee->birthday=$unknow;
+            $employee->email=$request->email;
+            $employee->position_id=$request->position;
+            $employee->save();
         }
     }
 
