@@ -286,6 +286,8 @@
                             let answer = response.data;
                             me.departures = answer.departures;
                             me.positions = answer.positions;
+                            me.employee=answer.employee;
+                            
                         })
                         .catch(function (error) {
                             console.log(error);
