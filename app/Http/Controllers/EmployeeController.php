@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEmployee;
+use App\Http\Requests\UpdateEmployee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Employee;
@@ -30,10 +31,10 @@ class EmployeeController extends Controller
 
     public function delete($id)
     {
-
+       
     }
 
-    public function update(Request $request)
+    public function update(UpdateEmployee $request)
     {
 
     }
