@@ -10,7 +10,10 @@ Ir al terminal e ingresar a la carpeta raiz de su localhost
 
 - git clone https://github.com/Gonzalo2310/CrudVue.git
 - cd CrudVue
+- renombrar .env.example como .env
+- configurar .env con las credenciales de la base de datos
 - composer install
+- php artisan migrate
 - npm i
 - npm run dev
 - escribir _http://localhost/CrudVue_ en su navegador
