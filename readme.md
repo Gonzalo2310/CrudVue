@@ -5,8 +5,18 @@ Este codigo es un ejemplo de Crud con Vue 2 y Laravel 5.4 creado para apoyar los
 Se ha creado un proyecto exclusivo para que sea una idea limpia y facil de cambiar.
 La idea consiste en dar de alta empleados y asignarles un departamento y un cargo.
 
-## Objetivo
+## Instalacion
+Ir al terminal e ingresar a la carpeta raiz de su localhost
 
+- git clone https://github.com/Gonzalo2310/CrudVue.git
+- cd CrudVue
+- composer install
+- npm i
+- npm run dev
+- escribir _http://localhost/CrudVue_ en su navegador
+
+
+## Objetivo
 - Crear CRUD simple. Departamento solo es un campo de texto
 - Crear CRUD de modelos relacionados. Cargo es solo un campo de texto pero solo puede existir dentro de un departamento
 - Crear CRUD de modelo complejo

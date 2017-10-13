@@ -311,7 +311,6 @@
                             }
                             else {
                                 me.idFilterPosition = me.nowatch;
-
                             }
                         }
                     });
