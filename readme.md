@@ -16,6 +16,8 @@ Ir al terminal e ingresar a la carpeta raiz de su localhost
 - php artisan migrate
 - npm i (si prefiere puede usar **yarn**)
 - npm run dev (o **npm run prod** si fuera para produccion)
+- aplicar permisos a carpetas (en linux y mac en el terminal en la carpeta del proyecto escribir: **chmod -R 777 public storage bootstrap/cache**)
+- generar key unica (en el terminal escribir **php artisan key:generate**)
 - escribir _http://localhost/CrudVue_ en su navegador
 
 
