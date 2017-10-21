@@ -14,8 +14,8 @@ Ir al terminal e ingresar a la carpeta raiz de su localhost
 - configurar .env con las credenciales de la base de datos
 - composer install
 - php artisan migrate
-- npm i
-- npm run dev
+- npm i (si prefiere puede usar **yarn**)
+- npm run dev (o **npm run prod** si fuera para produccion)
 - escribir _http://localhost/CrudVue_ en su navegador
 
 

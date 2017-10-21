@@ -1,7 +1,9 @@
 /node_modules
 /public/hot
 /public/storage
-/storage/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
 /vendor
 /.idea
 /.vagrant
